@@ -7,6 +7,7 @@ Experimental Roblox Shader System for the brave!
 |----|------|-------|---|
 |Vignette|✅|With intensity option|N/A|
 |Tint|✅|Changes general atmosphere color|N/A|
+|Chromatic Abberation|✅|Shift colors on edges of objects|N/A|
 |Film Grain|✅|Reduces color banding, makes it look more authentic|N/A|
 |SSR|⚠️|Can get messy depending on camera angle|Possible Fix: Estimate camera angle and distort the ssr based on that|
 |Motion Blur|⚠️|Effect is always applied so intensity had to be reduces|Possible Fix: Try to find out what is distance between two pixels and apply motion blur based on direction of difference|
