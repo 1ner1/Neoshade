@@ -19,6 +19,7 @@ Experimental Roblox Shader System
 |Comic Book|⚠️|Still work in progress|
 
 ## Instructions
+- Install NET 8.0 SDK
 - Restore the project `dotnet restore`
 - Compile source code using `dotnet publish`
 - Copy shaders directory to bin/Release/net8.0-windows
