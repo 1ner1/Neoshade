@@ -9,6 +9,7 @@ Experimental Roblox Shader System
 |Tint|✅|Changes general atmosphere color|N/A|
 |Film Grain|✅|Reduces color banding, makes it look more authentic|N/A|
 |SSR|⚠️|Can get messy depending on camera angle|Fix Idea: Estimate camera angle and distort the ssr based on that|
+|Depth Buffer Sharing|❌|Not done yet|N/A|
 |SSGI|❌|Not done yet|N/A|
 
 ## Effects
