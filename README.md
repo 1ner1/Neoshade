@@ -8,7 +8,8 @@ Experimental Roblox Shader System
 |Vignette|✅|With intensity option|N/A|
 |Tint|✅|Changes general atmosphere color|N/A|
 |Film Grain|✅|Reduces color banding, makes it look more authentic|N/A|
-|SSR|⚠️|Can get messy depending on camera angle|Fix Idea: Estimate camera angle and distort the ssr based on that|
+|SSR|⚠️|Can get messy depending on camera angle|Possible Fix: Estimate camera angle and distort the ssr based on that|
+|Motion Blur|⚠️|Effect is always applied so intensity had to be reduces|Possible Fix: Try to find out what is distance between two pixels and apply motion blur based on direction of difference|
 |Depth Buffer Sharing|❌|Not done yet|N/A|
 |SSGI|❌|Not done yet|N/A|
 
