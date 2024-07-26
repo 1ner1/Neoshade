@@ -3,7 +3,7 @@ License text copyright (c) 2020 MariaDB Corporation Ab, All Rights Reserved.
 
 Parameters
 
-Licensor:             1ner1 (Alexander Bailey).
+Licensor:             Nyll1 (Alexander Bailey).
 Licensed Work:        Neoshade. The Licensed Work is (c) 2024.
 
 
