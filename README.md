@@ -1,5 +1,5 @@
 # Neoshade
-Experimental Roblox Shader System
+Experimental Roblox Shader System for the brave!
 ![Demo](6.png)
 
 ## Features
