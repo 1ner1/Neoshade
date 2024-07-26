@@ -18,7 +18,15 @@ Experimental Roblox Shader System
 |----|------|-------|
 |Comic Book|⚠️|Still work in progress|
 
-
+## Instructions
+Restore the project `dotnet restore`
+Compile source code using `dotnet publish`
+Copy shaders directory to bin/Release/net8.0-windows
+Start Roblox
+Run Neoshade
+Neoshade will hook itself to Roblox
+To close Neoshade you should close the command prompt comes with it
+If you switch to another application and Roblox is not under the Neoshade then your clicks will pass through it to fix te problem you should click Roblox in task bar if that happens!
 
 ## Disclaimer
 Very early in development progress. 
@@ -32,3 +40,5 @@ Currently tested in:
 May or not work in AMD, we don't know that
 
 No binary builds due to my reputation being horrible, if you are technical enough read the source code line by line and carefully compile then run it in a VM with a gpu.
+
+
