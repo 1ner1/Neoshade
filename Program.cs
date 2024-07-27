@@ -6,6 +6,7 @@ using Windows.Win32.Graphics.Gdi;
 namespace Neoshade {
     public class Program {
         public static object windowHDC;
+        public static Window window;
      
         public static void Main() {
  
@@ -18,7 +19,10 @@ namespace Neoshade {
 
             window.Create();
             
+            Program.window = window;
+            
             Task.Run(() => {
+                ulong ticks = 0;
                 for(;;) {
                     HWND targetWindow = PInvoke.FindWindow(null, "Roblox");
 
@@ -35,12 +39,8 @@ namespace Neoshade {
 
                     byte[] data = Neoshade.InternalSystem.BitmapToByte(Neoshade.InternalSystem.GetFramebuffer(width + 200, height));
                     if(width >= 120 && height >= 120) {
-                        if(Renderer.previousTextureData.Count == 0) {
-                            Renderer.previousTextureData = data.ToList();   
-                        }                    
-                        else {
-                            Renderer.previousTextureData = Renderer.textureData.ToList();
-                        }                        
+                        Renderer.previousTextureData = Renderer.textureData.ToList();
+                        
 
                         Renderer.textureData = new List<byte>(data);
                         Renderer.didUpdateFrame = true;

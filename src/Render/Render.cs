@@ -13,10 +13,10 @@ public static class Renderer {
     };
 
     public static Vector2[] texcoords = new Vector2[4] {
-        new Vector2(1, -1),
+        new Vector2(1, -0.93f),
         new Vector2(1, 0),
         new Vector2(0, 0),
-        new Vector2(0, -1)
+        new Vector2(0, -0.93f)
     };
 
     public static int ProgramId = 0;
@@ -130,7 +130,7 @@ public static class Renderer {
             GL.ActiveTexture(TextureUnit.Texture1);
             GL.BindTexture(TextureTarget.Texture2D, PreviousFrameBufferId);
             if(previousTextureData.Count == textureData.Count) {
-                GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, width, height, PixelFormat.Bgra, PixelType.UnsignedByte, textureData.ToArray());                
+                GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, width, height, PixelFormat.Bgra, PixelType.UnsignedByte, previousTextureData.ToArray());                
             }
             else {
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, width, height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, previousTextureData.ToArray());

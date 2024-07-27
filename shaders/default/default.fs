@@ -7,22 +7,13 @@ uniform sampler2D PrevFBTex;
 uniform float randomizer;
 uniform vec2 resolution;
 
-// source: https://github.com/Experience-Monks/glsl-fast-gaussian-blur
-vec4 blur5(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
-  vec4 color = vec4(0.0);
-  vec2 off1 = vec2(1.3333333333333333) * direction;
-  color += texture2D(image, uv) * 0.29411764705882354;
-  color += texture2D(image, uv + (off1 / resolution)) * 0.35294117647058826;
-  color += texture2D(image, uv - (off1 / resolution)) * 0.35294117647058826;
-  return color; 
-}
 
 
 // Options for presets
 // [[BEGIN]]
 vec3 tint = vec3(-0.15, -0.12, 0);
-bool filmGrain = false;
-bool chromaticAberration = false;
+bool filmGrain = true;
+bool chromaticAberration = true;
 bool vignette = true;
 bool motionBlur = true;
 float vignettePower = 0.70;
@@ -34,7 +25,8 @@ bool cartoonizeEffect = false;
 
 // Other fine tunable settings
 
-float NOISE_MOIRRE = 20.0; // higher noise blocks provide more "digital noise" look than "analog noise look"
+float NOISE_MOIRRE = 200.0; // higher noise moirre provide more analog tape ish look
+float NOISE_BLOCKS = 1.0; // higher noise blocks provide more "digital noise" look than "analog noise look"
 float NOISE_RATIO = 0.05;
 highp float random(highp vec2 coords) {
    return fract(sin(dot(coords.xy, vec2(12.9898,78.233))) * 43758.5453);
@@ -49,6 +41,11 @@ vec3 boxBlur(sampler2D textureIn, vec2 coords, int area) {
   return vec3(outputColor.x / area, outputColor.y / area, outputColor.z / area);
 
   
+}
+
+// to be implemented
+vec3 directionalBlur(sampler2D textureIn, vec2 coords, vec2 direction) {
+  return vec3(0.0);
 }
 
 
@@ -80,7 +77,11 @@ void main()
     vec3 prevFB = vec3(texture2D(PrevFBTex, texCoords));
     vec3 textureColor = currentFB; 
     if(motionBlur) {
-     textureColor = mix(currentFB, boxBlur(PrevFBTex, texCoords, 16), 0.10);
+     // comparing difference between top left pixel for motion blur, kinda hacky but should work for most cases
+     vec3 pixelC = vec3(texture2D(FBTex, texCoords / 100.0));
+     vec3 pixelP = vec3(texture2D(PrevFBTex, texCoords / 100.0));
+     float dist = distance(pixelC, pixelP);
+     textureColor = mix(currentFB, boxBlur(PrevFBTex, texCoords, 16), dist);
 
     }
     vec3 reflectionSSR = vec3(texture2D(FBTex, vec2(texCoords.x, 1 - texCoords.y)));
@@ -124,11 +125,11 @@ void main()
     }
 
     if(chromaticAberration) {
-      vec3 redCoords = mix(currentFB, vec3(blur5(PrevFBTex, texCoords / 1.02, vec2(400, 400), vec2(0.2, 0.2))), 0.50);
-      vec3 blueCoords = mix(currentFB, vec3(blur5(PrevFBTex, texCoords / 1.009, vec2(400, 400), vec2(0.2, 0.2))), 0.50);
+      vec3 redCoords = mix(currentFB, vec3(boxBlur(PrevFBTex, texCoords / 1.02, 2)), 0.50);
+      vec3 blueCoords = mix(currentFB, vec3(boxBlur(PrevFBTex, texCoords / 1.009, 2)), 0.50);
 
       endPass.x = mix(endPass.x, redCoords.x, 0.5);
-      endPass.z = mix(blueCoords.x, blueCoords.z, 0.5);
+      endPass.z = mix(endPass.z, blueCoords.z, 0.5);
 
     }        
     

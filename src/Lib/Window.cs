@@ -11,6 +11,8 @@ namespace Neoshade {
         public string Title {get; set;}
         public object hWnd {get; set;}
         public Form WinForm {get; set;}
+        // cause for duplication: windows being horrible operating system
+        public Form RenderMiddle {get; set;}
         public GLControl control {get; set;}
 
         public void Create() {
@@ -21,6 +23,13 @@ namespace Neoshade {
             form.Text = Title;
             form.Show();
             form.FormBorderStyle = FormBorderStyle.FixedToolWindow;
+
+            RenderMiddle = new Form();
+            RenderMiddle.Width = 1024;
+            RenderMiddle.Height = 1024;
+            RenderMiddle.ShowInTaskbar = false;
+            RenderMiddle.Opacity = 0;
+            RenderMiddle.Show();
 
             
             PInvoke.SetWindowLong((HWND)form.Handle, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, (int)(WINDOW_EX_STYLE.WS_EX_NOACTIVATE | WINDOW_EX_STYLE.WS_EX_LAYERED | WINDOW_EX_STYLE.WS_EX_TRANSPARENT));

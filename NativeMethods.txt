@@ -24,3 +24,7 @@ PostMessage
 SetWindowLong
 SetForegroundWindow
 DwmRegisterThumbnail
+DwmUnregisterThumbnail
+HTHUMBNAIL
+DWM_THUMBNAIL_PROPERTIES
+DwmUpdateThumbnailProperties

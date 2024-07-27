@@ -3,12 +3,17 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Dwm;
 using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace Neoshade;
 
 
 public static class InternalSystem {
+  private static readonly int DWM_TNP_VISIBLE = 0x8;
+  private static readonly int DWM_TNP_OPACITY = 0x4;
+  private static readonly int DWM_TNP_RECTDESTINATION = 0x1;    
   [DllImport("user32.dll", SetLastError = true)]
    [return: MarshalAs(UnmanagedType.Bool)]
    static extern bool PrintWindow(IntPtr hwnd, IntPtr hDC, uint nFlags);
@@ -38,18 +43,38 @@ public static class InternalSystem {
         Marshal.FreeHGlobal(imageBuffer);
     }
 
+    static nint thumbnail = 0;
+
     public static Bitmap GetFramebuffer(int width, int height, int x = 0, int y = 0) {
         int length = width * height * 4;
         byte[] data = new byte[length];
-
+        HWND targetWindow = PInvoke.FindWindow(null, "Roblox");
         HDC screenHandler = PInvoke.GetDC(PInvoke.FindWindow(null, "Roblox"));
         
         HBITMAP bitmap = PInvoke.CreateCompatibleBitmap(screenHandler, width, height);
         HDC bitmapDisplayContext = PInvoke.CreateCompatibleDC(screenHandler);
         PInvoke.SelectObject(bitmapDisplayContext, bitmap);        
         // PInvoke.BitBlt(bitmapDisplayContext, x, y, width, height, screenHandler, 0, 0, ROP_CODE.SRCCOPY);
-        PrintWindow(PInvoke.FindWindow(null, "Roblox"), bitmapDisplayContext, 3);
+        // Console.WriteLine(PrintWindow(targetWindow, bitmapDisplayContext, 3));
+        
+        if(thumbnail == 0)
+        PInvoke.DwmRegisterThumbnail((HWND)Program.window.RenderMiddle.Handle, targetWindow, out thumbnail);
+        DWM_THUMBNAIL_PROPERTIES dwmThumbnailProperties = new DWM_THUMBNAIL_PROPERTIES() {
+            rcDestination = new RECT(0, 0, 1024, 800),
+            opacity = 255,
+            dwFlags = (uint)(DWM_TNP_VISIBLE | DWM_TNP_RECTDESTINATION | DWM_TNP_OPACITY),
+            rcSource = new RECT(0, 0, 1024, 800),
+            fVisible = true
+        };
 
+        PInvoke.DwmUpdateThumbnailProperties(thumbnail, dwmThumbnailProperties);
+        
+        PrintWindow(Program.window.RenderMiddle.Handle, bitmapDisplayContext, 3);
+
+        // PInvoke.DwmUnregisterThumbnail(thumbnail);
+        
+        //PInvoke.SetWindowLong(targetWindow, Windows.Win32.UI.WindowsAndMessaging.WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, (int)(WINDOW_EX_STYLE.WS_EX_COMPOSITED));
+        
         Bitmap bitmap1 = Bitmap.FromHbitmap(bitmap);
         PInvoke.DeleteDC(bitmapDisplayContext);
         PInvoke.DeleteObject(bitmap);        
