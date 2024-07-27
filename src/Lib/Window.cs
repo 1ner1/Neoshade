@@ -17,8 +17,8 @@ namespace Neoshade {
 
         public void Create() {
             Form form = new Form();
-            form.Width = 800;
-            form.Height = 800;
+            form.Width = 1024;
+            form.Height = 1024;
             hWnd = form.Handle;
             form.Text = Title;
             form.Show();
@@ -26,7 +26,7 @@ namespace Neoshade {
 
             RenderMiddle = new Form();
             RenderMiddle.Width = 1024;
-            RenderMiddle.Height = 1024;
+            RenderMiddle.Height = 900;
             RenderMiddle.ShowInTaskbar = false;
             RenderMiddle.Opacity = 0;
             RenderMiddle.Show();
@@ -46,7 +46,7 @@ namespace Neoshade {
             };
 
             control.Paint += (sender, eventArgs) => {
-                GL.Viewport(0, 0, this.WinForm.Width + 200, this.WinForm.Height);
+                GL.Viewport(0, 0, this.WinForm.Width, this.WinForm.Height);
 
                 Renderer.Render(control);
             };

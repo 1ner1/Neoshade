@@ -11,12 +11,13 @@ uniform vec2 resolution;
 
 // Options for presets
 // [[BEGIN]]
-vec3 tint = vec3(-0.15, -0.12, 0);
-bool filmGrain = true;
-bool chromaticAberration = true;
-bool vignette = true;
-bool motionBlur = true;
-float vignettePower = 0.70;
+vec3 tint = vec3(-0.15, -0.12, 0); // ambient color
+bool filmGrain = false; // add slight noise for an authentic feel
+bool chromaticAberration = false; // adds bending of light as a simulaton of a real life lens
+bool vignette = true; // darkens corner of the screen
+bool motionBlur = true; // blurs fast moving objects / little shaky good for car games
+bool lightStreaks = true; // adds slight strikes to lights to make them more dramatic
+bool improveLighting = true;
 
 // [[END]]
 
@@ -28,6 +29,8 @@ bool cartoonizeEffect = false;
 float NOISE_MOIRRE = 200.0; // higher noise moirre provide more analog tape ish look
 float NOISE_BLOCKS = 1.0; // higher noise blocks provide more "digital noise" look than "analog noise look"
 float NOISE_RATIO = 0.05;
+float vignettePower = 0.70;
+
 highp float random(highp vec2 coords) {
    return fract(sin(dot(coords.xy, vec2(12.9898,78.233))) * 43758.5453);
 }
@@ -43,9 +46,42 @@ vec3 boxBlur(sampler2D textureIn, vec2 coords, int area) {
   
 }
 
+float luminanceCalc(vec3 color) {
+  float luminance = (0.2126 * pow(color.x, 2.2)) + (0.7152  * pow(color.x, 2.2) + (0.0722 * pow(color.z, 2.2)));
+  return luminance;
+}
+
 // to be implemented
 vec3 directionalBlur(sampler2D textureIn, vec2 coords, vec2 direction) {
   return vec3(0.0);
+}
+
+vec3 improvedLighting(sampler2D textureIn, vec3 previousColor, vec2 coords) {
+  vec3 outputColor = previousColor;
+  for(int i = 0; i < 20; i++) {
+    vec3 tempColor = vec3(texture2D(textureIn, vec2(coords.x + (cos(i * 1.0) / 50.0), coords.y + (sin(i * 1.0) / 50.0))));
+    float luminance = luminanceCalc(tempColor);
+    float threshold = 0.8;
+    if(luminance > 0.8) {
+      outputColor += tempColor / 10;
+    }
+  }
+
+  return outputColor;
+}
+
+vec3 lightStreaksEffect(sampler2D textureIn, vec3 previousColor, vec2 coords) {
+  vec3 outputColor = previousColor;
+  for(int i = 0; i < 20; i++) {
+    vec3 tempColor = vec3(texture2D(textureIn, vec2(coords.x + (cos(i * 1.0) / 20.0), coords.y + (sin(i * 1.0) / 20.0))));
+    float luminance = luminanceCalc(tempColor);
+    float threshold = 0.8;
+    if(luminance > 0.8) {
+      outputColor += tempColor / 10;
+    }
+  }
+
+  return outputColor;
 }
 
 
@@ -133,6 +169,13 @@ void main()
 
     }        
     
+    /*if(lightStreaks) {
+      endPass = lightStreaksEffect(FBTex, endPass, texCoords);
+    }*/
+
+    if(improveLighting) {
+      endPass = improvedLighting(FBTex, endPass, texCoords);
+    }
 
     if(vignette) {
       float vignette = 1 - distance(gl_FragCoord.xy / resolution, vec2(0.5)) * vignettePower;

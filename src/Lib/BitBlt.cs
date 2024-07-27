@@ -60,10 +60,10 @@ public static class InternalSystem {
         if(thumbnail == 0)
         PInvoke.DwmRegisterThumbnail((HWND)Program.window.RenderMiddle.Handle, targetWindow, out thumbnail);
         DWM_THUMBNAIL_PROPERTIES dwmThumbnailProperties = new DWM_THUMBNAIL_PROPERTIES() {
-            rcDestination = new RECT(0, 0, 1024, 800),
+            rcDestination = new RECT(0, 0, width, height),
             opacity = 255,
             dwFlags = (uint)(DWM_TNP_VISIBLE | DWM_TNP_RECTDESTINATION | DWM_TNP_OPACITY),
-            rcSource = new RECT(0, 0, 1024, 800),
+            rcSource = new RECT(0, 0, width, height),
             fVisible = true
         };
 

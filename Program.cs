@@ -23,6 +23,7 @@ namespace Neoshade {
             
             Task.Run(() => {
                 ulong ticks = 0;
+                HWND desktopWindow = PInvoke.GetDesktopWindow();
                 for(;;) {
                     HWND targetWindow = PInvoke.FindWindow(null, "Roblox");
 
@@ -37,21 +38,25 @@ namespace Neoshade {
                     window.WinForm.Top = rect.top;
                               
 
-                    byte[] data = Neoshade.InternalSystem.BitmapToByte(Neoshade.InternalSystem.GetFramebuffer(width + 200, height));
+            
+                    byte[] data = Neoshade.InternalSystem.BitmapToByte(Neoshade.InternalSystem.GetFramebuffer(800, 800));
                     if(width >= 120 && height >= 120) {
                         Renderer.previousTextureData = Renderer.textureData.ToList();
                         
 
                         Renderer.textureData = new List<byte>(data);
                         Renderer.didUpdateFrame = true;
-                        Renderer.width = width + 200;
-                        Renderer.height = height;                        
+                        Renderer.width = width;
+                        Renderer.height = height;  
+                        Renderer.textureWidth = 800;
+                        Renderer.textureHeight = 800;                      
                     }
 
                     Random rnd = new Random();
 
 
-                    window.control.Width = width + 200;
+                    window.control.Width = width;
+                    window.control.Height = height;
 
                     window.control.Refresh();
                     // PInvoke.SetForegroundWindow(targetWindow);

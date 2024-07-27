@@ -28,3 +28,4 @@ DwmUnregisterThumbnail
 HTHUMBNAIL
 DWM_THUMBNAIL_PROPERTIES
 DwmUpdateThumbnailProperties
+GetDesktopWindow

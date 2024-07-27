@@ -13,10 +13,10 @@ public static class Renderer {
     };
 
     public static Vector2[] texcoords = new Vector2[4] {
-        new Vector2(1, -0.93f),
+        new Vector2(1, -0.95f),
         new Vector2(1, 0),
         new Vector2(0, 0),
-        new Vector2(0, -0.93f)
+        new Vector2(0, -0.95f)
     };
 
     public static int ProgramId = 0;
@@ -35,6 +35,8 @@ public static class Renderer {
     public static bool didUpdateFrame = false;
     public static int width;
     public static int height;
+    public static int textureWidth;
+    public static int textureHeight;
     public static int FrameBufferTexId = 0;
     public static int PreviousFrameBufferId = 0;
     static bool isFirstRender = true;
@@ -53,6 +55,8 @@ public static class Renderer {
         GL.CompileShader(VertexShaderId);
         GL.ShaderSource(FragmentShaderId, FragmentShader);
         GL.CompileShader(FragmentShaderId);
+        
+        Console.WriteLine(GL.GetShaderInfoLog(FragmentShaderId));
 
         GL.AttachShader(ProgramId, VertexShaderId);
         GL.AttachShader(ProgramId, FragmentShaderId);
@@ -106,10 +110,10 @@ public static class Renderer {
 
         if(isFirstRender && textureData.Count > 0 && previousTextureData.Count > 0) {
             GL.BindTexture(TextureTarget.Texture2D, FrameBufferTexId);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, width, height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, textureData.ToArray());
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, textureWidth, textureHeight, 0, PixelFormat.Bgra, PixelType.UnsignedByte, textureData.ToArray());
             GL.ActiveTexture(TextureUnit.Texture1);
             GL.BindTexture(TextureTarget.Texture2D, PreviousFrameBufferId);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, width, height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, previousTextureData.ToArray());
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, textureWidth, textureHeight, 0, PixelFormat.Bgra, PixelType.UnsignedByte, previousTextureData.ToArray());
             isFirstRender = false;
         }
 
@@ -117,11 +121,12 @@ public static class Renderer {
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, FrameBufferTexId);
             if(previousTextureData.Count == textureData.Count) {
-                GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, width, height, PixelFormat.Bgra, PixelType.UnsignedByte, textureData.ToArray());
+                GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, textureWidth, textureHeight, PixelFormat.Bgra, PixelType.UnsignedByte, textureData.ToArray());
 
             }
             else {
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, width, height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, textureData.ToArray());
+                // broken
+                // GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, width, height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, textureData.ToArray());
                 
             }
 
@@ -130,10 +135,10 @@ public static class Renderer {
             GL.ActiveTexture(TextureUnit.Texture1);
             GL.BindTexture(TextureTarget.Texture2D, PreviousFrameBufferId);
             if(previousTextureData.Count == textureData.Count) {
-                GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, width, height, PixelFormat.Bgra, PixelType.UnsignedByte, previousTextureData.ToArray());                
+                GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, textureWidth, textureHeight, PixelFormat.Bgra, PixelType.UnsignedByte, previousTextureData.ToArray());                
             }
             else {
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, width, height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, previousTextureData.ToArray());
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, textureWidth, textureHeight, 0, PixelFormat.Bgra, PixelType.UnsignedByte, previousTextureData.ToArray());
                 
             }
 
